@@ -1,2 +1,4 @@
 .terraform
 .terraform.lock.hcl
+main.tf
+bootstrap-cluster/consul-values.yaml
