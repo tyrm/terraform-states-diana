@@ -1,13 +1,11 @@
-data "digitalocean_certificate" "diana_ptzo_gdn" {
-  name = "diana-ptzo-gdn"
-}
-
+# create namespace
 resource "kubernetes_namespace" "traefik" {
   metadata {
     name = "traefik"
   }
 }
 
+# start ingress controller
 resource "helm_release" "traefik_ingress_controller" {
   name       = "traefik-ingress-controller"
   repository = "https://helm.traefik.io/traefik"
@@ -18,6 +16,11 @@ resource "helm_release" "traefik_ingress_controller" {
   values = [
     "${file("traefik-values.yaml")}"
   ]
+}
+
+# create digital ocean load balancer
+data "digitalocean_certificate" "diana_ptzo_gdn" {
+  name = "diana-ptzo-gdn"
 }
 
 resource "kubernetes_service" "traefik_ingress_controller" {
@@ -45,4 +48,21 @@ resource "kubernetes_service" "traefik_ingress_controller" {
 
     type = "LoadBalancer"
   }
+}
+
+data "digitalocean_loadbalancer" "diana_ptzo_gdn" {
+  name = "diana.ptzo.gdn"
+}
+
+# update dns
+data "digitalocean_domain" "ptzo_gdn" {
+  name = "ptzo.gdn"
+}
+
+resource "digitalocean_record" "diana" {
+  domain = data.digitalocean_domain.ptzo_gdn.name
+  type   = "A"
+  name   = "diana"
+  value  = data.digitalocean_loadbalancer.diana_ptzo_gdn.ip
+  ttl    = 300
 }
