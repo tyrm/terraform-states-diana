@@ -1,0 +1,6 @@
+---
+deployment:
+  replicas: 3
+
+service:
+  enabled: false

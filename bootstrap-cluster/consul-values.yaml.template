@@ -4,11 +4,6 @@ global:
     datacenter: diana
 
 server:
-    tolerations: |
-      - key: "workloadKind"
-        operator: "Equal"
-        value: "utility"
-        effect: "NoSchedule"
     extraConfig: |
       {
         "acl": {
