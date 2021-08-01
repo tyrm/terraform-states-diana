@@ -1,3 +1,7 @@
+data "digitalocean_certificate" "diana_ptzo_gdn" {
+  name = "diana-ptzo-gdn"
+}
+
 resource "helm_release" "traefik_ingress_controller" {
   name       = "traefik-ingress-controller"
   repository = "https://helm.traefik.io/traefik"
@@ -19,7 +23,7 @@ resource "kubernetes_service" "traefik_ingress_controller" {
       "service.beta.kubernetes.io/do-loadbalancer-size-slug" = "lb-small"
       "service.beta.kubernetes.io/do-loadbalancer-protocol" = "https"
       "service.beta.kubernetes.io/do-loadbalancer-tls-ports" = "443"
-      "service.beta.kubernetes.io/do-loadbalancer-certificate-id" = "bac8178f-b7e0-4a76-8814-b8bc91cbb034"
+      "service.beta.kubernetes.io/do-loadbalancer-certificate-id" = data.digitalocean_certificate.diana_ptzo_gdn.uuid
       "service.beta.kubernetes.io/do-loadbalancer-redirect-http-to-https" = "true"
     }
   }
