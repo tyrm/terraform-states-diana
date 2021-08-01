@@ -9,11 +9,8 @@ terraform {
   backend "s3" {
     skip_credentials_validation = true
     skip_metadata_api_check = true
-    access_key = "${ACCESS_KEY}"
-    secret_key = "${SECRET_KEY}"
-    endpoint = "https://sfo3.digitaloceanspaces.com"
     region = "us-east-1"
-    bucket = "ptzo-terraform-state" // name of your space
+    bucket = "ptzo-terraform-state"
     key = "bootstrap-cluster/terraform.tfstate"
   }
 }
